@@ -15,6 +15,7 @@
  */
 package org.camunda.bpm.spring.boot.starter.property;
 
+import cam.bmp.example.DeploymentProperty;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.camunda.bpm.engine.ProcessEngines;
 import org.camunda.bpm.spring.boot.starter.configuration.id.IdGeneratorConfiguration;
@@ -22,10 +23,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.UUID;
 
 import static org.springframework.core.io.support.ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX;
 
@@ -38,7 +42,7 @@ public class CamundaBpmProperties {
   public static final String[] DEFAULT_CMMN_RESOURCE_SUFFIXES = new String[]{"cmmn11.xml", "cmmn10.xml", "cmmn" };
   public static final String[] DEFAULT_DMN_RESOURCE_SUFFIXES = new String[]{"dmn11.xml", "dmn" };
 
-  static String[] initDeploymentResourcePattern() {
+  public static String[] initDeploymentResourcePattern() {
     final Set<String> suffixes = new HashSet<String>();
     suffixes.addAll(Arrays.asList(DEFAULT_DMN_RESOURCE_SUFFIXES));
     suffixes.addAll(Arrays.asList(DEFAULT_BPMN_RESOURCE_SUFFIXES));
@@ -60,6 +64,8 @@ public class CamundaBpmProperties {
    * name of the process engine
    */
   private String processEngineName = ProcessEngines.NAME_DEFAULT;
+
+  private Boolean generateUniqueEngineName = false;
 
   private String idGenerator = IdGeneratorConfiguration.STRONG;
 
@@ -98,6 +104,16 @@ public class CamundaBpmProperties {
    * deactivate camunda auto configuration
    */
   private boolean enabled = true;
+
+  private boolean deleteUponUndeploy = false;
+  private boolean scanForProcessDefinitions = true;
+  private boolean deployChangedOnly = false;
+
+  @NestedConfigurationProperty
+  private DeploymentProperty deployment;
+
+  @NestedConfigurationProperty
+  private List<DeploymentProperty> deployments = new ArrayList<>();
 
   /**
    * metrics configuration
@@ -327,6 +343,54 @@ public class CamundaBpmProperties {
 
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
+  }
+
+  public boolean isDeleteUponUndeploy() {
+    return deleteUponUndeploy;
+  }
+
+  public void setDeleteUponUndeploy(boolean deleteUponUndeploy) {
+    this.deleteUponUndeploy = deleteUponUndeploy;
+  }
+
+  public boolean isScanForProcessDefinitions() {
+    return scanForProcessDefinitions;
+  }
+
+  public void setScanForProcessDefinitions(boolean scanForProcessDefinitions) {
+    this.scanForProcessDefinitions = scanForProcessDefinitions;
+  }
+
+  public boolean isDeployChangedOnly() {
+    return deployChangedOnly;
+  }
+
+  public void setDeployChangedOnly(boolean deployChangedOnly) {
+    this.deployChangedOnly = deployChangedOnly;
+  }
+
+  public DeploymentProperty getDeployment() {
+    return deployment;
+  }
+
+  public void setDeployment(DeploymentProperty deployment) {
+    this.deployment = deployment;
+  }
+
+  public List<DeploymentProperty> getDeployments() {
+    return deployments;
+  }
+
+  public void setDeployments(List<DeploymentProperty> deployments) {
+    this.deployments = deployments;
+  }
+
+  public Boolean getGenerateUniqueEngineName() {
+    return generateUniqueEngineName;
+  }
+
+  public void setGenerateUniqueEngineName(Boolean generateUniqueEngineName) {
+    this.generateUniqueEngineName = generateUniqueEngineName;
   }
 
   @Override

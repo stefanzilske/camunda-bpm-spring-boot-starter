@@ -15,12 +15,24 @@
  */
 package org.camunda.bpm.spring.boot.starter.configuration;
 
+import cam.bmp.example.DeploymentProperty;
+import org.camunda.bpm.spring.boot.starter.property.ApplicationProperty;
 import org.springframework.core.io.Resource;
 
+import java.util.List;
 import java.util.Set;
 
 public interface CamundaDeploymentConfiguration extends CamundaProcessEngineConfiguration {
 
   Set<Resource> getDeploymentResources();
 
+  Set<Resource> getDeploymentResources(final String[] resourcePattern);
+
+
+  boolean isDeleteUponUndeploy();
+  boolean isDeployChangedOnly();
+  boolean isScanForProcessDefinitions();
+
+  DeploymentProperty getDeployment();
+  List<DeploymentProperty> getDeployments();
 }

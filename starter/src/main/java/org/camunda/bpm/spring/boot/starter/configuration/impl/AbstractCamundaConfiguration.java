@@ -53,6 +53,4 @@ public abstract class AbstractCamundaConfiguration extends SpringBootProcessEngi
 
   @Autowired
   protected CamundaBpmProperties camundaBpmProperties;
-
-
 }

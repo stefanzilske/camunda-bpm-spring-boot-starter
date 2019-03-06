@@ -15,7 +15,7 @@
  */
 package org.camunda.bpm.spring.boot.starter.configuration.impl;
 
-import org.camunda.bpm.engine.spring.SpringProcessEngineConfiguration;
+import cam.bmp.example.DeploymentProperty;
 import org.camunda.bpm.spring.boot.starter.configuration.CamundaDeploymentConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +27,7 @@ import org.springframework.core.io.support.ResourceArrayPropertyEditor;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,22 +36,26 @@ import static java.util.Collections.EMPTY_SET;
 public class DefaultDeploymentConfiguration extends AbstractCamundaConfiguration implements CamundaDeploymentConfiguration {
   private final Logger logger = LoggerFactory.getLogger(DefaultDeploymentConfiguration.class);
 
-  @Override
-  public void preInit(SpringProcessEngineConfiguration configuration) {
-    if (camundaBpmProperties.isAutoDeploymentEnabled()) {
-      final Set<Resource> resources = getDeploymentResources();
-      configuration.setDeploymentResources(resources.toArray(new Resource[resources.size()]));
-      LOG.autoDeployResources(resources);
-    }
-  }
+//  @Override
+//  public void preInit(SpringProcessEngineConfiguration configuration) {
+//    if (camundaBpmProperties.isAutoDeploymentEnabled()) {
+//      final Set<Resource> resources = getDeploymentResources();
+//      configuration.setDeploymentResources(resources.toArray(new Resource[resources.size()]));
+//      LOG.autoDeployResources(resources);
+//    }
+//  }
 
   @Override
   public Set<Resource> getDeploymentResources() {
+    return getDeploymentResources(camundaBpmProperties.getDeploymentResourcePattern());
+  }
+
+  public Set<Resource> getDeploymentResources(final String[] resourcePattern) {
 
     final ResourceArrayPropertyEditor resolver = new ResourceArrayPropertyEditor();
 
     try {
-      final String[] resourcePattern = camundaBpmProperties.getDeploymentResourcePattern();
+//      final String[] resourcePattern = camundaBpmProperties.getDeploymentResourcePattern();
       logger.debug("resolving deployment resources for pattern {}", (Object[]) resourcePattern);
       resolver.setValue(resourcePattern);
 
@@ -90,5 +95,27 @@ public class DefaultDeploymentConfiguration extends AbstractCamundaConfiguration
     return false;
   }
 
+  @Override
+  public DeploymentProperty getDeployment() {
+    return camundaBpmProperties.getDeployment();
+  }
 
+  @Override
+  public List<DeploymentProperty> getDeployments() {
+    return camundaBpmProperties.getDeployments();
+  }
+
+  @Override
+  public boolean isDeployChangedOnly() {
+    return camundaBpmProperties.isDeployChangedOnly();
+  }
+
+  @Override
+  public boolean isScanForProcessDefinitions() {
+    return camundaBpmProperties.isScanForProcessDefinitions();
+  }
+
+  public boolean isDeleteUponUndeploy(){
+    return camundaBpmProperties.isDeleteUponUndeploy();
+  }
 }

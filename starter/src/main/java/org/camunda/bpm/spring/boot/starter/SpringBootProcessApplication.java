@@ -21,11 +21,13 @@ import static org.camunda.bpm.spring.boot.starter.util.GetProcessApplicationName
 import static org.camunda.bpm.spring.boot.starter.util.SpringBootProcessEngineLogger.LOG;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
 
+import cam.bmp.example.DeploymentProperty;
 import org.camunda.bpm.application.PostDeploy;
 import org.camunda.bpm.application.PreUndeploy;
 import org.camunda.bpm.container.RuntimeContainerDelegate;
@@ -63,6 +65,30 @@ public class SpringBootProcessApplication extends SpringProcessApplication {
       @Override
       public String toString() {
         return "disableDeploymentResourcePattern";
+      }
+
+      @Override public boolean isDeleteUponUndeploy() {
+        return false;
+      }
+
+      @Override public Set<Resource> getDeploymentResources(String[] resourcePattern) {
+        return null;
+      }
+
+      @Override public List<DeploymentProperty> getDeployments() {
+        return null;
+      }
+
+      @Override public boolean isDeployChangedOnly() {
+        return false;
+      }
+
+      @Override public boolean isScanForProcessDefinitions() {
+        return false;
+      }
+
+      @Override public DeploymentProperty getDeployment() {
+        return null;
       }
     };
   }

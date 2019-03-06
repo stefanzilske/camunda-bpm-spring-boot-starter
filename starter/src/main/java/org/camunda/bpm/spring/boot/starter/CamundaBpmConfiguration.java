@@ -19,6 +19,7 @@ import static org.camunda.bpm.spring.boot.starter.jdbc.HistoryLevelDeterminatorJ
 
 import java.util.List;
 
+import cam.bmp.example.Deployer;
 import org.camunda.bpm.engine.impl.cfg.CompositeProcessEnginePlugin;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.engine.impl.cfg.ProcessEnginePlugin;
@@ -77,6 +78,12 @@ public class CamundaBpmConfiguration {
     final SpringProcessEngineConfiguration configuration = CamundaSpringBootUtil.springProcessEngineConfiguration();
     configuration.getProcessEnginePlugins().add(new CompositeProcessEnginePlugin(processEnginePlugins));
     return configuration;
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(Deployer.class)
+  public static Deployer camundaDeployer() {
+    return new Deployer();
   }
 
   @Bean

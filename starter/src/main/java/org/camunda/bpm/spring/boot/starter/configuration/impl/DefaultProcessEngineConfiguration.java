@@ -19,14 +19,22 @@ import org.camunda.bpm.engine.impl.cfg.IdGenerator;
 import org.camunda.bpm.engine.spring.SpringProcessEngineConfiguration;
 import org.camunda.bpm.spring.boot.starter.configuration.CamundaProcessEngineConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.ServletContextAware;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextListener;
 import java.util.Optional;
+import java.util.UUID;
 
 public class DefaultProcessEngineConfiguration extends AbstractCamundaConfiguration implements CamundaProcessEngineConfiguration {
 
   @Autowired
   private Optional<IdGenerator> idGenerator;
+
+  private String contextPath;
 
   @Override
   public void preInit(SpringProcessEngineConfiguration configuration) {
@@ -35,6 +43,7 @@ public class DefaultProcessEngineConfiguration extends AbstractCamundaConfigurat
     setIdGenerator(configuration);
     setJobExecutorAcquireByPriority(configuration);
     setDefaultNumberOfRetries(configuration);
+    configuration.setDefaultContextPath(contextPath);
   }
 
   private void setIdGenerator(SpringProcessEngineConfiguration configuration) {
@@ -52,6 +61,9 @@ public class DefaultProcessEngineConfiguration extends AbstractCamundaConfigurat
 
   private void setProcessEngineName(SpringProcessEngineConfiguration configuration) {
     String processEngineName = StringUtils.trimAllWhitespace(camundaBpmProperties.getProcessEngineName());
+    if (camundaBpmProperties.getGenerateUniqueEngineName()) {
+      processEngineName = UUID.randomUUID().toString();
+    }
     if (!StringUtils.isEmpty(processEngineName) && !processEngineName.contains("-")) {
       configuration.setProcessEngineName(processEngineName);
     } else {
@@ -67,5 +79,17 @@ public class DefaultProcessEngineConfiguration extends AbstractCamundaConfigurat
   private void setDefaultNumberOfRetries(SpringProcessEngineConfiguration configuration) {
     Optional.ofNullable(camundaBpmProperties.getDefaultNumberOfRetries())
       .ifPresent(configuration::setDefaultNumberOfRetries);
+  }
+
+  @ConditionalOnWebApplication
+  @Configuration
+  class ContextPathConfiguration implements ServletContextAware {
+
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+      if (!StringUtils.isEmpty(servletContext.getContextPath())) {
+        contextPath = servletContext.getContextPath();
+      }
+    }
   }
 }

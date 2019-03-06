@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015-2019 camunda services GmbH and various authors (info@camunda.com)
+ * Copyright © 2013-2019 camunda services GmbH and various authors (info@camunda.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.camunda.bpm.spring.boot.starter.test.pa;
+package org.camunda.bpm.spring.boot.starter.test.helper;
 
-import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * Test process application.
- *
- * @author Svetlana Dorokhova.
+ * @author Nikola Koevski
  */
-@SpringBootApplication
-//@EnableProcessApplication
-public class TestProcessApplication {
+@SpringBootTest(properties = {"camunda.bpm.generate-unique-engine-name=true",
+  "spring.datasource.generate-unique-name=true"})
+public @interface UniqueNames {
+
 }
