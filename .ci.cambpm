@@ -1,2 +1,2 @@
-@Library("camunda-ci") _
+@Library("camunda-ci-stage@SRE-165") _
 buildMavenAndDeployToMavenCentral([jdk:8, mvn:3.5, mvnProfiles:'distro-ee', licenseCheck:true])
